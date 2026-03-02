@@ -11,7 +11,6 @@
             <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
                 <div class="p-6">
 
-                    {{-- Botão criar --}}
                     @can('user.create')
                         <div class="mb-4 flex justify-end">
                             <a href="{{ route('users.create') }}"
@@ -74,13 +73,9 @@
                                                 </span>
                                         @endif
                                     </td>
-
-                                    {{-- Data --}}
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
                                         {{ $user->created_at->format('d/m/Y H:i') }}
                                     </td>
-
-                                    {{-- Ações --}}
                                     @canany(['user.update', 'user.delete'])
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
 

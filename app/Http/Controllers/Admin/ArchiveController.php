@@ -23,7 +23,7 @@ class ArchiveController extends Controller
      */
     public function index(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
-//        $this->authorize('archive.view');
+        $this->authorize('archive.view');
         $archives = $this->archivesService->all();
         return view($this->viewPath.'.index', compact('archives'));
     }

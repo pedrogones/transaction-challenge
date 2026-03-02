@@ -51,7 +51,7 @@ class TransactionService
 
     public function findById($id): Transaction
     {
-        return Transaction::with( 'user')->findOrFail($id);
+        return Transaction::with( 'user', 'archive')->findOrFail($id);
     }
 
     public function findBy(string $field, mixed $value): Transaction
@@ -64,5 +64,21 @@ class TransactionService
         return $transaction->delete();
     }
 
+    public function whereDate($date)
+    {
+        return Transaction::whereDate('created_at', $date);
+    }
+
+    public function getInfoTransactions($date = null): array
+    {
+        $query = $date ? $this->whereDate($date) : Transaction::query();
+
+        $value = (clone $query)->sum('value');
+        $aproves   = (clone $query)->where('status', 'Aprovada')->count();
+        $inprocess = (clone $query)->where('status', 'Em processamento')->count();
+        $negative   = (clone $query)->where('status', 'Negada')->count();
+
+        return ['value' => formatValueCurrencyBr($value), 'inProcess' => $inprocess, 'aproves' => $aproves, 'negative' => $negative];
+    }
 
 }

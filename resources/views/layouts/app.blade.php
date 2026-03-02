@@ -9,7 +9,8 @@
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -63,27 +64,25 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 <script>
-    // Toastr
-    {{--$(function () {--}}
-    {{--    toastr.options = {--}}
-    {{--        closeButton: true,--}}
-    {{--        progressBar: true,--}}
-    {{--        newestOnTop: true,--}}
-    {{--        timeOut: 3500,--}}
-    {{--        positionClass: 'toast-top-right'--}}
-    {{--    };--}}
+    $(function () {
+        toastr.options = {
+            closeButton: true,
+            progressBar: true,
+            newestOnTop: true,
+            timeOut: 3500,
+            positionClass: 'toast-top-right'
+        };
 
-    {{--    @if(session('success')) toastr.success(@json(session('success'))); @endif--}}
-    {{--    @if(session('error')) toastr.error(@json(session('error'))); @endif--}}
-    {{--    @if(session('warning')) toastr.warning(@json(session('warning'))); @endif--}}
-    {{--    @if(session('info')) toastr.info(@json(session('info'))); @endif--}}
-    {{--});--}}
+        @if(session('success')) toastr.success(@json(session('success'))); @endif
+        @if(session('error')) toastr.error(@json(session('error'))); @endif
+        @if(session('warning')) toastr.warning(@json(session('warning'))); @endif
+        @if(session('info')) toastr.info(@json(session('info'))); @endif
+    });
 
-    // SweetAlert delete confirm (form-delete)
     $(document).on('submit', '.form-delete', function (e) {
         e.preventDefault();
 
@@ -91,7 +90,7 @@
 
         Swal.fire({
             title: 'Tem certeza?',
-            text: 'Esse registro será excluído.',
+            text: 'Esse registro sera excluido.',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#dc2626',
@@ -104,7 +103,6 @@
         });
     });
 
-    // Sidebar mobile
     $(document).on('click', '[data-sidebar-open]', function () {
         $('#sidebarOverlay').removeClass('hidden');
         $('#appSidebar').removeClass('-translate-x-full');
@@ -120,5 +118,6 @@
         $('#appSidebar').addClass('-translate-x-full');
     });
 </script>
+@stack('scripts')
 </body>
 </html>

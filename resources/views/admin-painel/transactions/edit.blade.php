@@ -10,7 +10,7 @@
             <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
                 <div class="p-6">
 
-                    <form action="{{ route('transactions.update', $transaction->id) }}" method="POST">
+                    <form action="{{ route('transactions.update', $transaction->id) }}" enctype="multipart/form-data" method="POST">
                         @csrf
                         @method('PUT')
                         @include('admin-painel.transactions.form')

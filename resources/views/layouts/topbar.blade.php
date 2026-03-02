@@ -1,3 +1,8 @@
+@php
+    $tenantContext = function_exists('tenant') ? tenant() : null;
+    $isTenantContext = ! is_null($tenantContext);
+@endphp
+
 <header class="sticky top-0 z-30 bg-slate-950/70 backdrop-blur border-b border-white/5">
     <div class="h-16 px-4 lg:px-8 flex items-center gap-3">
 
@@ -8,15 +13,23 @@
         </button>
 
         <div class="flex items-center gap-3">
-            <a href="{{ route('transactions.create') }}"
-               class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-gradient-to-r from-violet-500 to-blue-500 text-white text-sm font-semibold shadow">
-                <span class="text-lg leading-none">+</span>
-                Nova Transação
-            </a>
-
-            <div class="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center font-semibold">
-                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-            </div>
+            @if($isTenantContext)
+                @can('transaction.create')
+                    <a href="{{ route('transactions.create') }}"
+                       class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-gradient-to-r from-violet-500 to-blue-500 text-white text-sm font-semibold shadow">
+                        <span class="text-lg leading-none">+</span>
+                        Nova Transacao
+                    </a>
+                @endcan
+            @else
+                @can('tenant.create')
+                    <a href="{{ route('central.tenants.create') }}"
+                       class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-gradient-to-r from-violet-500 to-blue-500 text-white text-sm font-semibold shadow">
+                        <span class="text-lg leading-none">+</span>
+                        Novo Tenant
+                    </a>
+                @endcan
+            @endif
         </div>
     </div>
 </header>

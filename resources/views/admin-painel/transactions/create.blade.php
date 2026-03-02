@@ -10,7 +10,7 @@
             <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
                 <div class="p-6">
 
-                    <form action="{{ route('transactions.store') }}" autocomplete="off" method="POST">
+                    <form action="{{ route('transactions.store') }}" autocomplete="off" enctype="multipart/form-data" method="POST">
                         @csrf
                         @include('admin-painel.transactions.form')
                     </form>

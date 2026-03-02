@@ -10,6 +10,7 @@ use App\Services\Transactions\TransactionService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Laracasts\Presenter\Exceptions\PresenterException;
 
 class TransactionController extends Controller
 {
@@ -78,7 +79,6 @@ class TransactionController extends Controller
 
         } catch (\Throwable $e) {
             DB::rollBack();
-            dd($e);
             if (isset($archive)) {
                 $this->archiveUploadService->delete($archive);
             }
@@ -88,7 +88,7 @@ class TransactionController extends Controller
 
     /**
      * Display the specified resource.
-     * @throws AuthorizationException
+     * @throws AuthorizationException|PresenterException
      */
     public function show(Request $request): \Illuminate\Http\JsonResponse
     {

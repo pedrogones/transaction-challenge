@@ -17,20 +17,26 @@ class StoreUpdateTransactionRequest extends FormRequest
     {
         $isCreate = $this->isMethod('post');
 
-        return [
+        $rules =  [
             'cpf' => [
                 'required',
                 'regex:/^\d{3}\.?\d{3}\.?\d{3}\-?\d{2}$/',
             ],
             'value' => ['required', 'numeric', 'min:0.01'],
             'status' => ['required', Rule::in(['Em processamento', 'Aprovada', 'Negada'])],
-
-            'archive' => ['nullable',
-                'file',
+            'archive' => [ $isCreate ? 'required' : 'nullable',
+                    'file',
                 'mimes:pdf,jpg,jpeg,png',
                 'max:5120',
             ],
         ];
+        if (!$isCreate && !$this->hasFile('archive')) {
+            $rules['archive_id'] = [
+                'required',
+                Rule::exists('archives', 'id'),
+            ];
+        }
+        return $rules;
     }
 
     public function messages(): array
@@ -48,29 +54,11 @@ class StoreUpdateTransactionRequest extends FormRequest
 
             'archive.required' => 'O arquivo é obrigatório.',
             'archive.file' => 'Arquivo inválido.',
-            'archive.mimes' => 'O arquivo deve ser PDF, JPG ou PNG.',
+            'archive.mimes' => 'O arquivo deve ser PDF, JPG, JPEG ou PNG.',
             'archive.max' => 'O arquivo deve ter no máximo 5MB.',
 
             'archive_id.required' => 'O arquivo atual é obrigatório quando nenhum novo arquivo for enviado.',
-            'archive_id.exists' => 'Arquivo atual inválido.',
+            'archive_id.exists' => 'Arquivo atual inválido.'
         ];
-    }
-
-    /**
-     * @throws HttpResponseException
-     */
-    protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
-    {
-        throw new HttpResponseException(response()->json([
-            'message' => 'Erro de validação',
-            'errors' => $validator->errors(),
-        ], 422));
-    }
-
-    protected function failedAuthorization()
-    {
-        throw new HttpResponseException(response()->json([
-            'message' => 'Não autorizado',
-        ], 403));
     }
 }

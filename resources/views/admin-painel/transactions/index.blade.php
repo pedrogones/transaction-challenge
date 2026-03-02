@@ -23,15 +23,7 @@
                         <label for="transactionSearch" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                             Pesquisar transações
                         </label>
-                        <input
-                            id="transactionSearch"
-                            type="text"
-                            placeholder="Busque por status, valor, data..."
-                            class="w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:ring-indigo-500"
-                        />
-                        <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                            O filtro é aplicado na lista atual (página atual da paginação).
-                        </p>
+                        <input id="transactionSearch" type="text" placeholder="Busque por status, valor, data..." class="w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:ring-indigo-500"/>
                     </div>
                     <div id="transactionsGrid" class="grid md:grid-cols-2 gap-4">
                         @forelse($transactions as $transaction)
@@ -40,7 +32,7 @@
                                         data-id="{{ $transaction->id }}"
                                         data-status="{{ strtolower($transaction->status ?? '') }}"
                                         data-value="R$ {{ number_format($transaction->value, 2, ',', '.') }}"
-                                        data-date="{{ $transaction->present()->createdFormatDate }}"
+                                        data-date="{{ $transaction->present()->createdFormatDateTime }}"
                                     >
                                 <div class="flex items-center gap-4 text-sm md:text-base text-gray-800 dark:text-gray-100">
                                     <span class="font-semibold">
@@ -53,40 +45,28 @@
                                             'Negada' => 'bg-red-100 text-red-700',
                                         ];
                                     @endphp
-                                    - <span class="px-2 py-1 text-xs font-semibold rounded-md {{ $statusColors[$transaction->status] ?? 'bg-gray-100 text-gray-700' }}"> {{ $transaction->status }} </span>  -  <span class="text-gray-500 dark:text-gray-400"> {{ $transaction->present()->createdFormatDate }} </span>
+                                    - <span class="px-2 py-1 text-xs font-semibold rounded-md {{ $statusColors[$transaction->status] ?? 'bg-gray-100 text-gray-700' }}"> {{ $transaction->status }} </span>  -  <span class="text-gray-500 dark:text-gray-400"> {{ $transaction->present()->createdFormatDateTime }} </span>
                                 </div>
 
                                 @canany(['transaction.view', 'transaction.update', 'transaction.delete'])
                                     <div class="relative">
-                                    <button
-                                        type="button"
-                                        class="btn-dropdown p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
-                                        data-dropdown="{{ $transaction->id }}"
-                                    >
+                                    <button type="button"  class="btn-dropdown p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700" data-dropdown="{{ $transaction->id }}">
                                         ⋮
                                     </button>
 
-                                    <div id="dropdown-{{ $transaction->id }}"
-                                         class="dropdown-menu hidden absolute right-0 mt-2 w-40 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-50">
+                                    <div id="dropdown-{{ $transaction->id }}" class="dropdown-menu hidden absolute right-0 mt-2 w-40 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-50">
 
-                                        <button
-                                            type="button"
-                                            class="btn-view block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600"
-                                            data-id="{{ $transaction->id }}"
-                                        >
+                                        <button type="button" class="btn-view block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600" data-id="{{ $transaction->id }}"  >
                                             Ver
                                         </button>
 
                                         @can('transaction.update')
-                                        <a href="{{ route('transactions.edit', $transaction->id) }}"
-                                           class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 btn-edit">
+                                        <a href="{{ route('transactions.edit', $transaction->id) }}" class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 btn-edit">
                                             Editar
                                         </a>
                                         @endcan
                                         @can('transaction.delete')
-                                        <form method="POST"
-                                              action="{{ route('transactions.destroy', $transaction->id) }}"
-                                              class="form-delete">
+                                        <form method="POST" action="{{ route('transactions.destroy', $transaction->id) }}" class="form-delete">
                                             @csrf
                                             @method('DELETE')
 
@@ -120,4 +100,34 @@
         </div>
     </div>
     @include('admin-painel.transactions.modal-show')
+    <script>
+        $(document).ready(function () {
+
+            $('#transactionSearch').on('keyup', function () {
+                let search = $(this).val().toLowerCase().trim();
+                let visibleCount = 0;
+
+                $('.transaction-item').each(function () {
+                    let status = ($(this).data('status') || '').toString().toLowerCase();
+                    let value  = ($(this).data('value') || '').toString().toLowerCase();
+                    let date   = ($(this).data('date') || '').toString().toLowerCase();
+
+                    let text = status + ' ' + value + ' ' + date;
+
+                    if (text.includes(search)) {
+                        $(this).show();
+                        visibleCount++;
+                    } else {
+                        $(this).hide();
+                    }
+                });
+                if (visibleCount === 0) {
+                    $('#noResults').removeClass('hidden');
+                } else {
+                    $('#noResults').addClass('hidden');
+                }
+            });
+
+        });
+    </script>
 </x-app-layout>

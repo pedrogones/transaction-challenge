@@ -24,9 +24,10 @@ class UserController extends Controller
      * Display a listing of the resource.
      * @throws AuthorizationException
      */
-    public function index()
+    public function index(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         $this->authorize('user.view');
+
         \Flasher\Toastr\Prime\toastr()->success('Funcionando!');
 //        return back();
         $users = $this->userService->getAllPaginated();
@@ -38,11 +39,13 @@ class UserController extends Controller
      * Show the form for creating a new resource.
      * @throws AuthorizationException
      */
-    public function create()
+    public function create(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
     {
         $this->authorize('user.create');
+
         $roles = $this->roleService->getAll();
         $user = null;
+
         return view($this->viewPath . '.create', compact('roles', 'user'));
     }
 
@@ -55,7 +58,6 @@ class UserController extends Controller
         $this->authorize('user.create');
 
         $created = $this->userService->create($request->validated());
-
         if ($created) {
             flash()->success(__('User created successfully.'));
             return redirect()->route('users.index');
@@ -87,6 +89,7 @@ class UserController extends Controller
 
         $user = $this->userService->findById($id);
         $roles = $this->roleService->getAll();
+
         return view($this->viewPath . '.edit', compact('user', 'roles'));
     }
 
@@ -96,6 +99,7 @@ class UserController extends Controller
      */
     public function update(StoreUpdateUserRequest $request, string $id)
     {
+        $this->authorize('user.update');
         $user = $this->userService->findById($id);
         $updated = $this->userService->update($user, $request->all());
 

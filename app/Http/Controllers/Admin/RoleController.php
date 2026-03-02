@@ -72,8 +72,10 @@ class RoleController extends Controller
     public function edit(string $id)
     {
         $this->authorize('role.update');
+
         $role = $this->roleService->findById($id);
         $permissions = $this->roleService->getAllPermissions();
+
         return view($this->viewPath.'.roles.edit', compact('role', 'permissions'));
     }
 
@@ -84,7 +86,9 @@ class RoleController extends Controller
     public function update(StoreUpdateRoleRequest $request, string $id): \Illuminate\Http\RedirectResponse
     {
         $this->authorize('role.update');
+
         $role = $this->roleService->findById($id);
+        if(secureRole($role))
         $this->roleService->update($role, $request->all());
 
         return redirect()->route('roles.index')->with('success', 'Role atualizada com sucesso!');
@@ -98,10 +102,11 @@ class RoleController extends Controller
     public function destroy(string $id): \Illuminate\Http\RedirectResponse
     {
         $this->authorize('role.delete');
+
         $role = $this->roleService->findById($id);
-        if($role->name == 'Admin' || $role->name == 'Administrador'){
-            \Flasher\Prime\flash()->error('Role não pode ser removida!');
-            return redirect()->back()->with('error', 'Role não pode ser removida!');
+        if(secureRole($role)){
+            return redirect()->route('roles.index')
+                ->with('error', 'Role não pode ser removida!');
         }
         $this->roleService->delete($role);
 

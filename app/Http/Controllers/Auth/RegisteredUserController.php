@@ -43,8 +43,9 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
+        $user->syncRoles(['User']);
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('transactions.index', absolute: false));
     }
 }

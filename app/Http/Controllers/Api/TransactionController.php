@@ -73,19 +73,7 @@ class TransactionController extends Controller
         $this->authorize('transaction.view');
         try {
             $transaction = $this->transactionService->findById($id);
-            return response()->json([
-                'id' => $transaction->id,
-                'user_name' => $transaction->user->name,
-                'user_email' => optional($transaction->user)->email,
-                'cpf' => $transaction->cpf,
-                'value' => (float) $transaction->value,
-                'value_formatted' => 'R$ ' . number_format((float) $transaction->value, 2, ',', '.'),
-                'status' => $transaction->status,
-                'created_at' => $transaction->present()->createdFormatDateTime,
-                'status_class' => $transaction->present()->getStatus,
-                'archive_original_name' => $transaction->archive?->original_name,
-                'archive_url' => isset($transaction?->archive) ? url('storage/'.$transaction->archive->path) : null,
-            ]);
+            return response()->json([ 'transaction' => $transaction ], 200);
         } catch (\Throwable $e) {
             return response()->json(['message' => "Registro não encontrado"], 500);
         }

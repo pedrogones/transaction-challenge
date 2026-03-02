@@ -30,7 +30,11 @@ class PermissionsSeeder extends Seeder
             'role.update',
             'role.delete',
             'dashboard.view',
-            'archive.view'
+            'archive.view',
+            'tenant.view',
+            'tenant.create',
+            'tenant.update',
+            'tenant.delete',
         ];
 
         foreach ($permissions as $permission) {

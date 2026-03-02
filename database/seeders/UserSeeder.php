@@ -16,6 +16,13 @@ class UserSeeder extends Seeder
     {
         $users = [
             [
+                'name' => 'Root',
+                'email' => 'root@root.com',
+                'password' => Hash::make('123123'),
+                'email_verified_at' => now(),
+                'role' => 'Admin',
+            ],
+            [
                 'name' => 'Pedro Targino Gomes',
                 'email' => 'pedro@financeiro.com',
                 'password' => Hash::make('123123'),
@@ -26,29 +33,40 @@ class UserSeeder extends Seeder
                 'email' => 'emilly@financeiro.com',
                 'password' => Hash::make('123123'),
                 'email_verified_at' => now(),
+                'role' => 'User',
             ],
             [
                 'name' => 'Victor Souza',
                 'email' => 'victor@financeiro.com',
                 'password' => Hash::make('123123'),
                 'email_verified_at' => now(),
+                'role' => 'User',
             ],
             [
                 'name' => 'Samuel Fernandes',
                 'email' => 'samuel@financeiro.com',
                 'password' => Hash::make('123123'),
                 'email_verified_at' => now(),
+                'role' => 'User',
             ],
             [
                 'name' => 'Adriana Cristina Targino',
                 'email' => 'adriana@financeiro.com',
                 'password' => Hash::make('123123'),
                 'email_verified_at' => now(),
+                'role' => 'User',
             ],
         ];
 
         foreach ($users as $user){
-            User::updateOrCreate(['email' => $user['email']], $user);
+
+            $role = $user['role'] ?? 'User';
+            unset($user['role']);
+
+            $user = User::updateOrCreate(['email' => $user['email']], $user);
+
+            $user->syncRoles([$role]);
+
         }
     }
 }

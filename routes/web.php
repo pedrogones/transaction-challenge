@@ -1,34 +1,27 @@
 <?php
 
-use App\Http\Controllers\Admin\ArchiveController;
-use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\Admin\TransactionController;
-use App\Http\Controllers\Api\TransactionController as ApiTransactionController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Central\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Central\DashboardController;
+use App\Http\Controllers\Central\TenantController;
+use App\Http\Middleware\EnsureCentralAuthenticated;
+use App\Http\Middleware\EnsureCentralDomain;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return redirect()->route('login');
-});
+Route::middleware(EnsureCentralDomain::class)->group(function () {
+    Route::prefix('admin')->name('central.')->group(function () {
+        Route::get('/', function () {
+            return auth()->check()
+                ? redirect()->route('central.dashboard')
+                : redirect()->route('central.login');
+        })->name('home');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+        Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
+        Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login.store');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::resource('roles', RoleController::class);
-    Route::resource('users', UserController::class);
-    Route::resource('transactions', TransactionController::class);
-    Route::resource('archives', ArchiveController::class)->only(['index']);
-    Route::get('ajax-show-transaction', [TransactionController::class, 'show'])->name('ajax-show-transaction');
+        Route::middleware(EnsureCentralAuthenticated::class)->group(function () {
+            Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+            Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+            Route::resource('tenants', TenantController::class)->names('tenants');
+        });
+    });
 });
-//Route::prefix('api')
-//    ->middleware(['web', 'auth'])
-//    ->group(function () {
-//        Route::apiResource('transactions', ApiTransactionController::class);
-//    });
-require __DIR__.'/auth.php';
