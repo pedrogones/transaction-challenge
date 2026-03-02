@@ -40,7 +40,7 @@
                                 <tr>
                                     <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-200">{{ $tenant->id }}</td>
                                     <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-200">{{ $tenant->data['name'] ?? $tenant->id }}</td>
-                                    <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-200">{{ $tenant->domains->first()->domain ?? '-' }}</td>
+                                    <td class="px-4 py-3 text-sm text-blue-700 dark:text-blue-200"><a class="border-b"  href="http://{{$tenant?->domains?->first()->domain}}:8000" target="_blank">{{ $tenant->domains->first()->domain ?? '-' }}</a></td>
                                     <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-200">{{ optional($tenant->created_at)->format('d/m/Y H:i') }}</td>
                                 </tr>
                             @empty

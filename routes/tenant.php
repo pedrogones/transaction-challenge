@@ -60,6 +60,19 @@ Route::prefix('api')->middleware([
         ], 200);
     });
 
+    Route::get('/auth/check', function (Request $request) {
+        $user = $request->user('sanctum');
+
+        return response()->json([
+            'authenticated' => (bool) $user,
+            'user' => $user ? [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+            ] : null,
+        ]);
+    });
+
     Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('transactions-api', ApiTransactionController::class);
     });

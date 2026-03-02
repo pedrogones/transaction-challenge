@@ -23,7 +23,9 @@ class RolesSeeder extends Seeder
             'transaction.view',
             'transaction.create',
             'dashboard.view',
-            'archive.view'
+            'archive.view',
+            'transaction.edit',
+            'transaction.delete',
         ]);
     }
 }

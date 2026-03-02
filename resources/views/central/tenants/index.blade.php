@@ -42,7 +42,7 @@
                                 <tr>
                                     <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-200">{{ $tenant->id }}</td>
                                     <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-200">{{ $name }}</td>
-                                    <td class="px-4 py-3 text-sm text-gray-700 dark:text-gray-200">{{ $domain }}</td>
+                                    <td class="px-4 py-3 text-sm text-blue-700 dark:text-blue-200"><a class="cursor-pointer border-b " href="http://{{$domain}}:8000" target="_blank" > {{ $domain }}</a></td>
                                     <td class="px-4 py-3 text-sm">
                                         @if($isActive)
                                             <span class="px-2 py-1 rounded-md text-xs font-semibold bg-green-100 text-green-700">Ativo</span>

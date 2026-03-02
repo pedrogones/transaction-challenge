@@ -98,7 +98,12 @@ class TransactionController extends Controller
         $archiveOriginalName = null;
 
         if ($transaction->archive) {
-            $archiveUrl = Storage::disk($transaction->archive->disk ?? 'public')->url($transaction->archive->path);
+            $disk = $transaction->archive->disk ?? 'public';
+            $path = $transaction->archive->path;
+            $driver = config("filesystems.disks.$disk.driver");
+            $archiveUrl = ($driver === 'local' && $disk === 'public')
+                ? tenant_asset($path)
+                : Storage::disk($disk)->url($path);
             $archiveOriginalName = $transaction->archive->original_name ?? null;
         }
 
