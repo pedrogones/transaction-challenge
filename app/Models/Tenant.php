@@ -11,5 +11,10 @@ use Illuminate\Database\Eloquent\Model;
 class Tenant extends BaseTenant implements  TenantWithDatabase
 {
     use HasDatabase, HasDomains;
+    protected $fillable = ['id', 'name'];
+
+    protected $casts = [
+        'data' => 'array',
+    ];
 
 }

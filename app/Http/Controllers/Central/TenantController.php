@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Central;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Tenant\StoreUpdateTenantRequest;
 use App\Models\Tenant;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
@@ -42,26 +43,23 @@ class TenantController extends Controller
     /**
      * @throws AuthorizationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreUpdateTenantRequest $request): RedirectResponse
     {
         $this->authorize('tenant.create');
 
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:120'],
-            'tenant_id' => ['nullable', 'string', 'max:50', 'regex:/^[a-zA-Z0-9\\-]+$/', 'unique:tenants,id'],
-            'domain' => ['required', 'string', 'max:255', 'unique:domains,domain'],
-            'is_active' => ['required', 'boolean'],
-        ]);
+        $validated = $request->validated();
 
-        $tenantId = $validated['tenant_id'] ?: Str::slug($validated['name']);
+        $tenantId = $validated['id'] ?: Str::slug($validated['name']);
         $tenantId = $tenantId !== '' ? $tenantId : (string) Str::uuid();
+
+        if(Tenant::query()->where('id', $tenantId)->exists()){
+            return back()->withInput(['name' => $validated['name'], 'id'=>$tenantId, 'domain' => $validated['domain']])->withErrors(['id' => 'Este identificador de tenant já está em uso.']);
+        }
 
         $tenant = Tenant::create([
             'id' => Str::lower($tenantId),
-            'data' => [
-                'name' => $validated['name'],
-                'is_active' => (bool) $validated['is_active'],
-            ],
+            'name' => $validated['name'],
+            'is_active' => (bool) $validated['is_active'],
         ]);
 
         $tenant->domains()->create([
@@ -104,7 +102,7 @@ class TenantController extends Controller
     /**
      * @throws AuthorizationException
      */
-    public function update(Request $request, string $id): RedirectResponse
+    public function update(StoreUpdateTenantRequest $request, string $id): RedirectResponse
     {
         $this->authorize('tenant.update');
 
@@ -114,22 +112,12 @@ class TenantController extends Controller
 
         $primaryDomain = $tenant->domains->first();
 
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:120'],
-            'domain' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('domains', 'domain')->ignore($primaryDomain?->id),
-            ],
-            'is_active' => ['required', 'boolean'],
-        ]);
-
+        $validated = $request->validated();
         $tenant->update([
             'data' => array_merge($tenant->data ?? [], [
                 'name' => $validated['name'],
-                'is_active' => (bool) $validated['is_active'],
-            ]),
+                'is_active' => (bool) $validated['is_active']]),
+            'name' => $validated['name']
         ]);
 
         if ($primaryDomain) {

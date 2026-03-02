@@ -48,7 +48,9 @@ class RoleController extends Controller
         $this->authorize('role.create');
 
         $this->roleService->create($request->all());
-        return redirect()->route('roles.index');
+        return redirect()
+            ->route('roles.index')
+            ->with('success', 'Role criada com sucesso.');
     }
 
     /**

@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -27,6 +26,7 @@ class UserSeeder extends Seeder
                 'email' => 'pedro@financeiro.com',
                 'password' => Hash::make('123123'),
                 'email_verified_at' => now(),
+                'role' => 'User',
             ],
             [
                 'name' => 'Emilly Fontes de Lemos Silva',

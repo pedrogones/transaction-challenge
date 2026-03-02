@@ -30,12 +30,10 @@ class TransactionService
                 'status' => $data['status']
             ]);
         });
-
     }
 
     public function update(Transaction $transaction, array $data): Transaction {
         return DB::transaction(function () use ($transaction, $data) {
-
             $updateData = [
                 'user_id' => auth()->id(),
                 'archive_id' => $data['archive_id'],
@@ -43,7 +41,6 @@ class TransactionService
                 'cpf' => $data['cpf'],
                 'status' => $data['status']
             ];
-
             $transaction->update($updateData);
             return $transaction;
         });

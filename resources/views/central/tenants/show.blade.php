@@ -1,7 +1,7 @@
 <x-app-layout>
     @php
         $domain = $tenant->domains->first()->domain ?? '-';
-        $name = $tenant->data['name'] ?? $tenant->id;
+        $name = $tenant->name ?? $tenant->data['name'] ?? $tenant->id;
         $isActive = (bool) ($tenant->data['is_active'] ?? true);
     @endphp
 

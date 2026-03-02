@@ -28,8 +28,6 @@ class UserController extends Controller
     {
         $this->authorize('user.view');
 
-        \Flasher\Toastr\Prime\toastr()->success('Funcionando!');
-//        return back();
         $users = $this->userService->getAllPaginated();
 
         return view($this->viewPath . '.index', compact('users'));
@@ -59,8 +57,9 @@ class UserController extends Controller
 
         $created = $this->userService->create($request->validated());
         if ($created) {
-            flash()->success(__('User created successfully.'));
-            return redirect()->route('users.index');
+            return redirect()
+                ->route('users.index')
+                ->with('success', 'Usuario criado com sucesso.');
         }
 
         return redirect()->back()->with('error', 'Erro ao criar usuário');
@@ -104,7 +103,9 @@ class UserController extends Controller
         $updated = $this->userService->update($user, $request->all());
 
         if ($updated) {
-            return redirect()->route('users.index');
+            return redirect()
+                ->route('users.index')
+                ->with('success', 'Usuario atualizado com sucesso.');
         }
 
         return redirect()->back()->with('error', 'Erro ao atualizar usuário');
@@ -122,7 +123,9 @@ class UserController extends Controller
         $deleted = $this->userService->delete($user);
 
         if ($deleted) {
-            return redirect()->route('users.index');
+            return redirect()
+                ->route('users.index')
+                ->with('success', 'Usuario removido com sucesso.');
         }
 
         return redirect()->back()->with('error', 'Erro ao remover usuário');

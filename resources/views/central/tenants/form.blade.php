@@ -6,7 +6,7 @@
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <div class="w-full">
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="name">Nome do tenant</label>
-        <input type="text" name="name" id="name" value="{{ old('name', $tenant->data['name'] ?? '') }}" placeholder="Ex.: Empresa XPTO"
+        <input type="text" name="name" id="name" value="{{ old('name', $tenant->name ?? '') }}" placeholder="Ex.: Empresa Exemplo"
             class="w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:ring-indigo-500 @error('name') border-red-500 @enderror">
         @error('name')
         <span class="text-sm text-red-500">{{ $message }}</span>
@@ -23,9 +23,9 @@
 
     @if(!$isEdit)
         <div class="w-full">
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="tenant_id">Identificador (opcional)</label>
-            <input type="text" name="tenant_id" id="tenant_id" value="{{ old('tenant_id') }}" placeholder="Ex.: empresa-exemplo" class="w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:ring-indigo-500 @error('tenant_id') border-red-500 @enderror">
-            @error('tenant_id')
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" for="id">Identificador (opcional)</label>
+            <input type="text" name="id" id="id" value="{{ old('id') }}" placeholder="Ex.: empresa-exemplo" class="w-full rounded-lg border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:ring-indigo-500 @error('id') border-red-500 @enderror">
+            @error('id')
             <span class="text-sm text-red-500">{{ $message }}</span>
             @enderror
         </div>
