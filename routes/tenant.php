@@ -23,7 +23,7 @@ Route::middleware([
 ])->group(function () {
     Route::get('/', function () {
         return auth()->check()
-            ? redirect()->route('dashboard.index')
+            ? redirect()->route('transactions.index')
             : redirect()->route('login');
     });
 

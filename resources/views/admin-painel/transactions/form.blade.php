@@ -71,7 +71,7 @@
                 @if(isset($transaction) && $transaction->archive)
                     <div class="mt-3 text-sm text-gray-600 dark:text-gray-300">
                         <span class="font-medium">Arquivo atual: {{$transaction->archive->original_name}}</span>
-                        <a href="{{ Storage::url($transaction->archive->path) }}" target="_blank" class="ml-1 text-indigo-600 hover:text-indigo-800 underline" >
+                        <a href="{{ tenant_asset($transaction->archive->path) }}" target="_blank" class="ml-1 text-indigo-600 hover:text-indigo-800 underline" >
                             Ver arquivo atual
                         </a>
                     </div>

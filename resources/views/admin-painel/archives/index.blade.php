@@ -46,43 +46,28 @@
                             <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                             @forelse($archives as $archive)
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-
-                                    {{-- Nome --}}
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
                                         {{ $archive->original_name }}
                                         <div class="text-xs text-gray-500">
                                             {{ $archive->mime_type }}
                                         </div>
                                     </td>
-
-                                    {{-- Tipo --}}
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
                                         <span class="px-2 py-1 text-xs font-semibold bg-blue-100 text-blue-700 rounded-md">
                                             {{ $archive->type }}
                                         </span>
                                     </td>
-
-                                    {{-- Categoria --}}
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
                                         {{ $archive->category ?? '-' }}
                                     </td>
-
-                                    {{-- Tamanho --}}
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
                                         {{ number_format($archive->size / 1024, 2) }} KB
                                     </td>
-
-                                    {{-- Data --}}
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
                                         {{ $archive->created_at->format('d/m/Y H:i') }}
                                     </td>
-
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-
-                                        <a href="{{url('storage/' . $archive->path)}}"
-                                           target="_blank"
-                                           class="inline-flex items-center justify-center w-9 h-9 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow transition"
-                                           title="Visualizar">
+                                        <a href="{{tenant_asset($archive->path)}}" target="_blank" class="inline-flex items-center justify-center w-9 h-9 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow transition"  title="Visualizar">
                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                  class="h-5 w-5"
                                                  fill="none"
